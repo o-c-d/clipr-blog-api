@@ -19,9 +19,9 @@ class CommentProvider
         $this->router = $router;
     }
 
-    public function getAllComments(?int $limit=10, ?int $page=1): array
+    public function getAllComments(?int $limit=10, ?int $page=1, ?array $filters=[]): array
     {
-        $pager = $this->manager->getPagerListAll($limit, $page);
+        $pager = $this->manager->getPagerListAll($limit, $page, $filters);
         $pcr = new PaginatedCollectionRepresentation($pager, $this->router, 'api_comment_list');
         return $pcr->represent();
     }

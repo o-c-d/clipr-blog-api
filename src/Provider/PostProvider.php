@@ -51,7 +51,7 @@ class PostProvider
     public function getPostsFromUser(User $user, ?int $limit=10, ?int $page=1): array
     {
         $pager = $this->manager->getPagerListFromUser($user, $limit, $page);
-        $pcr = new PaginatedCollectionRepresentation($pager, $this->router, 'api_post_user_list');
+        $pcr = new PaginatedCollectionRepresentation($pager, $this->router, 'api_get_profile_posts');
         return $pcr->represent();
     }
 

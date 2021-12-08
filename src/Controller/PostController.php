@@ -15,6 +15,8 @@ use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\HttpFoundation\Response;
 use Hateoas\Representation\PaginatedRepresentation;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use OpenApi\Annotations as OA;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -26,6 +28,7 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
  * @Route("/api/posts")
+ * @OA\Tag(name="Post")
  */
 class PostController extends AbstractRestController
 {
@@ -58,36 +61,15 @@ class PostController extends AbstractRestController
      * )
      * @ParamConverter("post", options={"mapping": {"slug": "slug"}})
      * @Rest\View(serializerGroups={"default"})
+     * @OA\Response(
+     *     response=200,
+     *     description="Post",
+     *     @Model(type=Post::class, groups={"default"})
+     * )
      */
     public function showAction(Post $post)
     {
         return $post;
-    }
-
-    /**
-     * @Rest\Get(
-     *      path="/{slug}/comments", 
-     *      name="api_post_comment_show",
-     *      requirements = {"slug"="[a-zA-Z0-9\-_\/]+"}
-     * )
-     * @Rest\QueryParam(
-     *     name="limit",
-     *     requirements="\d+",
-     *     default="10",
-     *     description="Max number of posts per page."
-     * )
-     * @Rest\QueryParam(
-     *     name="page",
-     *     requirements="\d+",
-     *     default="1",
-     *     description="The current page"
-     * )
-     * @ParamConverter("post", options={"mapping": {"slug": "slug"}})
-     * @Rest\View(serializerGroups={"default"})
-     */
-    public function listCommentsAction(Post $post, ParamFetcherInterface $paramFetcher, CommentProvider $provider)
-    {
-        return $provider->getCommentsForPost($post, $paramFetcher->get('limit'), $paramFetcher->get('page'));
     }
 
     /**
@@ -113,6 +95,15 @@ class PostController extends AbstractRestController
      * @Rest\View(StatusCode = 201)
      * @ParamConverter("post", converter="fos_rest.request_body")
      * @Security("is_granted('ROLE_WRITER')")
+     * @OA\RequestBody(
+     *      required=true,
+     *      @OA\JsonContent(ref=@Model(type=Post::class, groups={"post_input"}))
+     * ),
+     * @OA\Response(
+     *     response=201,
+     *     description="Returns the new Post",
+     *     @OA\JsonContent(ref=@Model(type=Post::class, groups={"default"}))
+     * )
      */
     public function createAction(Post $post, PostManager $manager, ConstraintViolationListInterface $validationErrors)
     {
@@ -133,6 +124,10 @@ class PostController extends AbstractRestController
      * @ParamConverter("post", options={"mapping": {"slug": "slug"}})
      * @ParamConverter("newPost", converter="fos_rest.request_body")
      * @Security("is_granted('edit', $post)")
+     * @OA\RequestBody(
+     *      required=true,
+     *      @OA\JsonContent(ref=@Model(type=Post::class, groups={"post_input"}))
+     * ),
      */
     public function updateAction(Post $post, Post $newPost, ConstraintViolationListInterface $validationErrors, PostManager $manager)
     {
@@ -146,12 +141,21 @@ class PostController extends AbstractRestController
     /**
      * @Rest\View(StatusCode = 200)
      * @Rest\Post(
-     *     path = "/{slug}/comment",
+     *     path = "/{slug}/comments",
      *     name = "api_post_comment",
      *     requirements = {"slug"="[a-zA-Z0-9\-_\/]+"}
      * )
      * @ParamConverter("post", options={"mapping": {"slug": "slug"}})
      * @ParamConverter("comment", converter="fos_rest.request_body")
+     * @OA\RequestBody(
+     *      required=true,
+     *      @OA\JsonContent(ref=@Model(type=Comment::class, groups={"comment_input"}))
+     * ),
+     * @OA\Response(
+     *     response=201,
+     *     description="Returns the new Post",
+     *     @OA\JsonContent(ref=@Model(type=Post::class, groups={"default"}))
+     * )
      */
     public function commentAction(Post $post, Comment $comment, ConstraintViolationListInterface $validationErrors, CommentManager $manager)
     {
@@ -162,6 +166,7 @@ class PostController extends AbstractRestController
 
         return $post;
     }
+
 
     /**
      * @Rest\View(StatusCode = 204)

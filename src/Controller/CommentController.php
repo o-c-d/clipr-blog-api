@@ -11,9 +11,13 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use OpenApi\Annotations as OA;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
  * @Route("/api/comments")
+ * @OA\Tag(name="Comment")
  */
 class CommentController extends AbstractRestController
 {
@@ -31,11 +35,30 @@ class CommentController extends AbstractRestController
      *     default="1",
      *     description="The current page"
      * )
+     * @Rest\QueryParam(
+     *     name="post",
+     *     nullable=true,
+     *     requirements="[a-zA-Z0-9\-_\/]+",
+     *     description="Filter on this post slug"
+     * )
+     * @Rest\QueryParam(
+     *     name="user",
+     *     nullable=true,
+     *     requirements="\d+",
+     *     description="Filter on this user id"
+     * )
      * @Rest\View(serializerGroups={"default"})
      */
     public function listAction(ParamFetcherInterface $paramFetcher, CommentProvider $provider)
     {
-        return $provider->getAllComments($paramFetcher->get('limit'), $paramFetcher->get('page'));
+        $filters = [];
+        if($paramFetcher->get('post')) {
+            $filters['post'] = $paramFetcher->get('post');
+        }
+        if($paramFetcher->get('user')) {
+            $filters['user'] = $paramFetcher->get('user');
+        }
+        return $provider->getAllComments($paramFetcher->get('limit'), $paramFetcher->get('page'), $filters);
     }
 
     /**

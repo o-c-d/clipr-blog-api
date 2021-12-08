@@ -8,11 +8,14 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use OpenApi\Annotations as OA;
+use Nelmio\ApiDocBundle\Annotation\Model;
 
 
 /**
  * @Route("/api/profile")
  * @Security("is_granted('ROLE_USER')")
+ * @OA\Tag(name="Profile")
  */
 class ProfileController extends AbstractRestController
 {
@@ -26,7 +29,6 @@ class ProfileController extends AbstractRestController
     public function getProfille()
     {
         $user = $this->getUser();
-        // dd($user);
         return $user;
     }
     

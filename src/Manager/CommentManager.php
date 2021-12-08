@@ -19,9 +19,16 @@ class CommentManager extends AbstractManager
         $this->em = $em;
     }
 
-    public function getPagerListAll($limit=10, $page=1): Pagerfanta
+    public function getPagerListAll(?int $limit=10, ?int $page=1, ?array $filters=[]): Pagerfanta
     {
-        $query = $this->em->getRepository(Comment::class)->getQueryForCommentsList();
+        $post = $user = null;
+        if(isset($filters['post'])&&null!==$filters['post']) {
+            $post = $this->em->getRepository(Post::class)->findOneBySlug($filters['post']);
+        }
+        if(isset($filters['user'])&&null!==$filters['user']) {
+            $user = $this->em->getRepository(User::class)->find($filters['user']);
+        }
+        $query = $this->em->getRepository(Comment::class)->getQueryForCommentsList($post, $user);
         return $this->getPager($query, $limit, $page);
     }
 

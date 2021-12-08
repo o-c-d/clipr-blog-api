@@ -22,13 +22,16 @@ class CommentRepository extends ServiceEntityRepository
         parent::__construct($registry, Comment::class);
     }
 
-    public function getQueryForCommentsList(): Query
+    public function getQueryForCommentsList(?Post $post=null, ?User $user=null): Query
     {
-        $qb = $this
-            ->createQueryBuilder('c')
-            ->getQuery()
-        ;
-        return $qb;
+        $qb = $this->createQueryBuilder('c');
+        switch(!null) {
+            case $post:
+                $qb->andWhere('c.post=:post')->setParameter('post', $post);
+            case $user:
+                $qb->andWhere('c.createdBy=:user')->setParameter('user', $user);
+        }
+        return $qb->getQuery();
     }
 
     public function getQueryForCommentsForPost(Post $post): Query

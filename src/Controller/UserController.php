@@ -12,10 +12,13 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use OpenApi\Annotations as OA;
+use Nelmio\ApiDocBundle\Annotation\Model;
 
 /**
  * @Route("/api/users")
  * @Security("is_granted('ROLE_ADMIN')")
+ * @OA\Tag(name="User")
  */
 class UserController extends AbstractRestController
 {

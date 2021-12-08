@@ -50,7 +50,7 @@ class PostRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findBySlug(string $slug): array
+    public function findOneBySlug(string $slug): array
     {
         return $this->createQueryBuilder('p')
             ->andWhere('p.slug = :slug')

@@ -59,6 +59,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Serializer\Expose
+     * @Serializer\Since("1.0")
+     * @Serializer\Groups({"default"})
      */
     private $id;
 
@@ -79,7 +82,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * @Serializer\Expose
      * @Serializer\Since("1.0")
-     * @Serializer\Groups({"default"})
+     * @Serializer\Groups({"default", "input"})
      */
     private $roles = [];
 

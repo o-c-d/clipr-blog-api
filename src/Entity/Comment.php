@@ -45,6 +45,9 @@ class Comment
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Serializer\Expose
+     * @Serializer\Since("1.0")
+     * @Serializer\Groups({"default"})
      */
     private $id;
 
@@ -54,11 +57,17 @@ class Comment
      * @ORM\ManyToOne(targetEntity="App\Entity\Post", inversedBy="comments")
      * @ORM\JoinColumn(name="post_id", referencedColumnName="id")
      * @ORM\OrderBy({"createdAt" = "DESC"})
+     * @Serializer\Expose
+     * @Serializer\Since("1.0")
+     * @Serializer\Groups({"default"})
      */
     protected $post;
 
     /**
      * @ORM\Column(type="text")
+     * @Serializer\Expose
+     * @Serializer\Since("1.0")
+     * @Serializer\Groups({"default", "comment_input"})
      */
     private $body;
 

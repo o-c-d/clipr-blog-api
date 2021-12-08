@@ -67,6 +67,10 @@ class Post
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     *
+     * @Serializer\Expose
+     * @Serializer\Since("1.0")
+     * @Serializer\Groups({"post_id"})
      */
     private $id;
 
@@ -75,7 +79,7 @@ class Post
      *
      * @Serializer\Expose
      * @Serializer\Since("1.0")
-     * @Serializer\Groups({"default"})
+     * @Serializer\Groups({"default", "post_input"})
      *
      * @Assert\NotBlank()
      */
@@ -88,7 +92,7 @@ class Post
      *
      * @Serializer\Expose
      * @Serializer\Since("1.0")
-     * @Serializer\Groups({"default"})
+     * @Serializer\Groups({"default", "post_identifier"})
      */
     private $slug;
 
@@ -99,7 +103,7 @@ class Post
      *
      * @Serializer\Expose
      * @Serializer\Since("1.0")
-     * @Serializer\Groups({"default"})
+     * @Serializer\Groups({"default", "post_input"})
      */
     private $description;
 
@@ -110,7 +114,7 @@ class Post
      *
      * @Serializer\Expose
      * @Serializer\Since("1.0")
-     * @Serializer\Groups({"default"})
+     * @Serializer\Groups({"default", "post_input"})
      */
     private $body;
 
@@ -130,7 +134,11 @@ class Post
     {
         return $this->id;
     }
-    
+
+    public function __toString()
+    {
+        return ''.$this->getId();
+    }
 
     /**
      * Get the value of title

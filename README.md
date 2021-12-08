@@ -77,6 +77,91 @@ javascript:(function(){ window.open('http://127.0.0.1:8000/api/posts/import?uri=
 ```
 (A browser able to send POST request with custom headers might be handy)
 
+# Project Feedback
+
+## Feature 1: Users and authentication
+
+### Create an authentication route that returns a token
+```
+POST http://127.0.0.1:8000/api/login/token
+```
+It should have been api/login, but my first tought was to add an endpoint for admin authentication and i wanted to have different names
+
+### Create a route that retrieve all users accessible
+```
+GET http://127.0.0.1:8000/api/users/
+```
+
+### Create a route that retrieves the current connected user
+```
+GET http://127.0.0.1:8000/api/profile/
+```
+The current user is a special kind of ressource and should have his own endpoint
+
+## Feature 2: Manage posts
+
+### Create a blog post
+```
+POST http://127.0.0.1:8000/api/posts/
+```
+
+### Update the blog post
+```
+PATCH http://127.0.0.1:8000/api/posts/{slug}
+```
+Usually the id is used to refer a ressource, but here the slug is unique and immutable, so we can use it and it would be easier for user to identify a post
+
+### Delete a blog post
+```
+DELETE http://127.0.0.1:8000/api/posts/{slug}
+```
+
+
+## Feature 3: Read posts
+
+### Create a route to list all the posts accessibles for the public
+```
+GET http://127.0.0.1:8000/api/posts/
+```
+
+### Create a route to list only the posts of the connected user
+```
+GET http://127.0.0.1:8000/api/profile/posts/
+```
+Here we consider the posts as sub ressources from User, a more "RESTFULL" point of view would be to consider posts as stand alone resources, and filter them by the current user.
+```
+GET http://127.0.0.1:8000/api/posts/
+```
+(with the current user id as user parameter)
+
+## Feature 4: Comments
+
+### Create a route to comment on a post for connected users or anonymous
+Again, we could consider comments as stand alone resource or as a sub resource from a post :
+```
+POST http://127.0.0.1:8000/api/posts/{slug}/comments
+```
+
+### Create a route to see every comment from a post
+```
+GET http://127.0.0.1:8000/api/comments/
+```
+(with the post slug as post parameter)
+
+
+## Feature 5: Create a post from Reddit
+```
+POST http://127.0.0.1:8000/api/posts/{slug}/import
+```
+
+
+
+
+
+
+
+
+
 
 # Project Creation history
 

@@ -13,13 +13,13 @@ trait BlameableEntity
 {
 
     /**
-     * @var User
+     * @var ?User
      *
      * @Gedmo\Blameable(on="create")
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
-     * @ORM\JoinColumn(name="created_by", referencedColumnName="id")
+     * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      */
-    protected $createdBy;
+    protected $createdBy=null;
 
     /**
      * @var ?User
@@ -28,7 +28,12 @@ trait BlameableEntity
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
      * @ORM\JoinColumn(name="updated_by", referencedColumnName="id", nullable=true)
      */
-    protected $updatedBy;
+    protected $updatedBy=null;
+
+    public function getOwner(): User
+    {
+        return $this->createdBy;
+    }
 
     /**
      * Set createdBy
@@ -48,7 +53,7 @@ trait BlameableEntity
      *
      * @return User
      */
-    public function getCreatedBy()
+    public function getCreatedBy(): User
     {
         return $this->createdBy;
     }
@@ -71,7 +76,7 @@ trait BlameableEntity
      *
      * @return User
      */
-    public function getUpdatedBy()
+    public function getUpdatedBy(): User
     {
         return $this->updatedBy;
     }

@@ -14,8 +14,6 @@ class PostCrudController extends AbstractCrudController
         return Post::class;
     }
 
-    /*
-    */
     public function configureFields(string $pageName): iterable
     {
         return [

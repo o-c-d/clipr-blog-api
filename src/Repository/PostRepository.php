@@ -41,7 +41,7 @@ class PostRepository extends ServiceEntityRepository
         return $qb;
     }
 
-    public function findAll()
+    public function findAll(): array
     {
         return $this->createQueryBuilder('p')
             ->orderBy('p.createdAt', 'DESC')
@@ -50,7 +50,7 @@ class PostRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findBySlug(string $slug)
+    public function findBySlug(string $slug): array
     {
         return $this->createQueryBuilder('p')
             ->andWhere('p.slug = :slug')
@@ -61,16 +61,4 @@ class PostRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-
-    /*
-    public function findOneBySomeField($value): ?Post
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

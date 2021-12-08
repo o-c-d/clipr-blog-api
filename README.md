@@ -2,71 +2,88 @@ clipr Test - REST API for Blog
 ==============================
 
 # Requirements
+
 - PHP 7.4 with pdo_sqlite extension enabled
-- composer 
+- composer
 
 # Installation
 
 Open a console in project directory and run :
 
-## Dependencies installation:
+## Dependencies installation
+
 ```
 composer install
 ```
 
-## Database creation, sschema update and fixtures loading:
+## Database creation, schema update and fixtures loading
+
 ```
 composer prepare-db
 ```
 
 ## Run internal web server
+
 ```
 composer run-server
 ```
+
 You can now browse api doc at:
-http://127.0.0.1:8000/api/doc
+<http://127.0.0.1:8000/api/doc>
 
 ## Dev tools
+
 ```
 composer linter
 composer tests
 ```
 
-
 # Project feedback
 
 ## Time spent
+
 roughly 20-24 hours
 
-### Time consumming task:
+### Time consumming tasks
+
 - hateoas
 - Results pagination
 - Swagger configuration
 - Tests
 
 ## Design decisions
+
 - docker is not required so we use symfony internal server (version 4.4 because it has been discontinued since then)
 - posts can be accessed by slug but users and comments are accessed by id
 - slug from post are not editable
+- user email and password are not editable
+- posts and comments are sorted by descending creation date
 
-## TODO list :
+## TODO list
+
 Thses task should have been done but i didn't have time:
+- secure admin
 - configure token creation on swagger UI
 - Versionning
 - Make comments require a validation
-- more tests
+- more tests, with authentication
 
-## Tools added for more comfort:
+## Tools added for more comfort
+
 - easyadmin administration
-- bookmarlet to import Post from Reddit : 
+- bookmarlet to import Post from Reddit :
+```
 javascript:(function(){ window.open('http://127.0.0.1:8000/api/posts/import?uri='+encodeURIComponent(location.href)); })();
+```
 (A browser able to send POST request with custom headers might be handy)
+
 
 # Project Creation history
 
-## Command used at project iniialization : 
+## Command used at project iniialization
 
 ### Base project
+
 ```
 composer create-project symfony/skeleton:"^5.3" ./
 composer require jms/serializer-bundle
@@ -84,11 +101,13 @@ composer require pagerfanta/pagerfanta
 ```
 
 ### Add admin dashboard for easy database administration
+
 ```
 composer require easycorp/easyadmin-bundle
 ```
 
 ### DevTools
+
 ```
 composer require --working-dir=tools/php-cs-fixer friendsofphp/php-cs-fixer
 composer require --dev phpstan/phpstan-symfony

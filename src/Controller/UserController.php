@@ -70,7 +70,7 @@ class UserController extends AbstractRestController
 
     /**
      * @Rest\View(StatusCode = 200)
-     * @Rest\Put(
+     * @Rest\Patch(
      *     path = "/{id}",
      *     name = "api_user_update",
      *     requirements = {"id"="\d+"}
@@ -80,8 +80,6 @@ class UserController extends AbstractRestController
      */
     public function updateAction(User $user, User $newUser, ConstraintViolationListInterface $validationErrors, UserManager $manager)
     {
-        $this->denyAccessUnlessGranted('edit', $user);
-
         $this->checkViolations($validationErrors);
 
         $manager->patch($user, $newUser);
@@ -100,8 +98,6 @@ class UserController extends AbstractRestController
      */
     public function deleteAction(User $user, UserManager $manager)
     {
-        $this->denyAccessUnlessGranted('delete', $user);
-        
         $manager->delete($user);
 
         return;

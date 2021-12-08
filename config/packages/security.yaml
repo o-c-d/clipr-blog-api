@@ -14,9 +14,9 @@ security:
                 class: App\Entity\User
                 property: email
     firewalls:
-        # dev:
-        #     pattern: ^/(_(profiler|wdt)|css|images|js)/
-        #     security: false
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
 
         api_login:
             pattern: ^/api/login/token
@@ -36,26 +36,24 @@ security:
             jwt: ~
             access_denied_handler: App\Security\AccessDeniedHandler
 
-        # admin:
-        #     pattern:   ^/admin
-        #     security: false
+        admin:
+            pattern:   ^/admin
+            custom_authenticator: App\Security\AdminAuthenticator
+            logout:
+                path: admin_logout
+                # where to redirect after logout
+                target: admin_login
 
-        # main:
-        #     lazy: true
-        #     security: false
+        main:
+            lazy: true
+            security: false
+
+    role_hierarchy:
+        ROLE_WRITER:      ROLE_USER
+        ROLE_ADMIN:       ROLE_WRITER
+        ROLE_SUPER_ADMIN: ROLE_ADMIN
 
     access_control:
-        - { path: ^/api/login/token, roles: PUBLIC_ACCESS }
+        - { path: /api/login/token, roles: PUBLIC_ACCESS }
         - { path: ^/api/doc, roles: PUBLIC_ACCESS }
-        - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
-            # activate different ways to authenticate
-            # https://symfony.com/doc/current/security.html#the-firewall
-
-            # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
-
-    # Easy way to control access for large sections of your site
-    # Note: Only the *first* access control that matches will be used
-    # access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/admin, roles: ROLE_ADMIN }

@@ -125,7 +125,7 @@ class PostController extends AbstractRestController
 
     /**
      * @Rest\View(StatusCode = 200)
-     * @Rest\Put(
+     * @Rest\Patch(
      *     path = "/{slug}",
      *     name = "api_post_update",
      *     requirements = {"slug"="[a-zA-Z0-9\-_\/]+"}

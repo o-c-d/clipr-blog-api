@@ -9,7 +9,6 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class PostVoter extends Voter
 {
-    // these strings are just invented: you can use anything
     const DELETE = 'delete';
     const EDIT = 'edit';
 
@@ -37,9 +36,13 @@ class PostVoter extends Voter
             return false;
         }
 
-        // you know $subject is a Post object, thanks to `supports()`
         /** @var Post $post */
         $post = $subject;
+
+        // ADMIN can do anything
+        if(in_array('ROLE_ADMIN', $user->getRoles())) {
+            return true;
+        }
 
         switch ($attribute) {
             case self::DELETE:
@@ -53,18 +56,11 @@ class PostVoter extends Voter
 
     private function canDelete(Post $post, User $user): bool
     {
-        // if they can edit, they can view
-        if ($this->canEdit($post, $user)) {
-            return true;
-        }
-
-        // the Post object could have, for example, a method `isPrivate()`
-        return !$post->isPrivate();
+        return $user === $post->getOwner();
     }
 
     private function canEdit(Post $post, User $user): bool
     {
-        // this assumes that the Post object has a `getOwner()` method
         return $user === $post->getOwner();
     }
 }

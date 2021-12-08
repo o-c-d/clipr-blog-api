@@ -44,8 +44,13 @@ class UserCrudController extends AbstractCrudController
             ->setRequired($pageName === Crud::PAGE_NEW)
             ->setHelp('Leave blank to not edit.');
 
-        $roles = ChoiceField::new('roles', "ROLES SYNFONY")
-            ->setChoices(['Administrateur (symfony)' => '{"ROLE":"ROLE_ADMIN"}', 'Utilisateur (symfony)' => '{"ROLE":"ROLE_USER"}'])
+        $roles = ChoiceField::new('roles', "ROLES")
+            ->setChoices([
+                'Super Admin' => 'ROLE_SUPER_ADMIN',
+                'Admin' => 'ROLE_ADMIN',
+                'Writer' => 'ROLE_WRITER', 
+                'User' => 'ROLE_USER', 
+            ])
             ->allowMultipleChoices(true);
 
         switch ($pageName) {

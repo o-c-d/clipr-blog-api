@@ -26,24 +26,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      ),
  *      exclusion = @Hateoas\Exclusion(groups={"default"})
  * )
- * @Hateoas\Relation(
- *      "modify",
- *      href = @Hateoas\Route(
- *          "api_comment_update",
- *          parameters = { "id" = "expr(object.getId())" },
- *          absolute = true
- *      ),
- *      exclusion = @Hateoas\Exclusion(groups={"default"})
- * )
- * @Hateoas\Relation(
- *      "delete",
- *      href = @Hateoas\Route(
- *          "api_comment_delete",
- *          parameters = { "id" = "expr(object.getId())" },
- *          absolute = true
- *      ),
- *      exclusion = @Hateoas\Exclusion(groups={"default"})
- * )
  */
 class Comment
 {

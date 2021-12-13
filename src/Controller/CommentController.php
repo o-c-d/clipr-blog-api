@@ -7,6 +7,7 @@ use App\Provider\CommentProvider;
 use App\Manager\CommentManager;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcherInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -47,7 +48,8 @@ class CommentController extends AbstractRestController
      *     requirements="\d+",
      *     description="Filter on this user id"
      * )
-     * @Rest\View(serializerGroups={"default"})
+     * @Rest\View(statusCode=Response::HTTP_OK, serializerGroups={"comment_details"})
+     * @OA\Response(response=Response::HTTP_OK, ref="#/components/responses/PaginatedCommentsList")
      */
     public function listAction(ParamFetcherInterface $paramFetcher, CommentProvider $provider)
     {
@@ -68,7 +70,12 @@ class CommentController extends AbstractRestController
      *     requirements = {"id"="\d+"}
      * )
      * @ParamConverter("comment", options={"mapping": {"id": "id"}})
-     * @Rest\View(serializerGroups={"default"})
+     * @Rest\View(serializerGroups={"comment_details"})
+     * @OA\Response(
+     *      response=Response::HTTP_OK, 
+     *      description="Details about a Comment", 
+     *      @Model(type=Comment::class, groups={"comment_details"})
+     * )
      */
     public function showAction(Comment $comment)
     {

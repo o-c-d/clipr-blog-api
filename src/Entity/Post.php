@@ -27,7 +27,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *          parameters = { "slug" = "expr(object.getSlug())" },
  *          absolute = true
  *      ),
- *      exclusion = @Hateoas\Exclusion(groups={"default"})
+ *      exclusion = @Hateoas\Exclusion(groups={"post_details", "comment_details"})
  * )
  * @Hateoas\Relation(
  *      "modify",
@@ -36,7 +36,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *          parameters = { "slug" = "expr(object.getSlug())" },
  *          absolute = true
  *      ),
- *      exclusion = @Hateoas\Exclusion(groups={"default"})
+ *      exclusion = @Hateoas\Exclusion(groups={"post_details"})
  * )
  * @Hateoas\Relation(
  *      "delete",
@@ -45,7 +45,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *          parameters = { "slug" = "expr(object.getSlug())" },
  *          absolute = true
  *      ),
- *      exclusion = @Hateoas\Exclusion(groups={"default"})
+ *      exclusion = @Hateoas\Exclusion(groups={"post_details"})
  * )
  *
  */
@@ -79,7 +79,7 @@ class Post
      *
      * @Serializer\Expose
      * @Serializer\Since("1.0")
-     * @Serializer\Groups({"default", "post_input"})
+     * @Serializer\Groups({"post_details", "post_input", "comment_details"})
      *
      * @Assert\NotBlank()
      */
@@ -92,7 +92,7 @@ class Post
      *
      * @Serializer\Expose
      * @Serializer\Since("1.0")
-     * @Serializer\Groups({"default", "post_identifier"})
+     * @Serializer\Groups({"post_details", "post_identifier", "comment_details"})
      */
     private $slug;
 
@@ -103,7 +103,7 @@ class Post
      *
      * @Serializer\Expose
      * @Serializer\Since("1.0")
-     * @Serializer\Groups({"default", "post_input"})
+     * @Serializer\Groups({"post_details", "post_input", "comment_details"})
      */
     private $description;
 
@@ -114,7 +114,7 @@ class Post
      *
      * @Serializer\Expose
      * @Serializer\Since("1.0")
-     * @Serializer\Groups({"default", "post_input"})
+     * @Serializer\Groups({"post_details", "post_input", "comment_details"})
      */
     private $body;
 
@@ -126,7 +126,8 @@ class Post
      *
      * @Serializer\Expose
      * @Serializer\Since("1.0")
-     * @Serializer\Groups({"default"})
+     * @Serializer\Groups({"post_details"})
+     * @Serializer\Type("ArrayCollection<App\Entity\Comment>")
      */
     private $comments;
 

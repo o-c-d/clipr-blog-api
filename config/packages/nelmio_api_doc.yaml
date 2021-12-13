@@ -2,7 +2,7 @@ nelmio_api_doc:
     documentation:
         info:
             title: Blog API
-            description: This is an awesome app!
+            description: Blog API for clipr test
             version: 1.0.0
         components:
             securitySchemes:
@@ -10,6 +10,161 @@ nelmio_api_doc:
                     type: http
                     scheme: bearer
                     bearerFormat: JWT
+            responses:
+                BadRequest:
+                    description: "BadRequest Response"
+                    content:
+                        "application/json":
+                            schema:
+                                type: object
+                                properties:
+                                    code:
+                                        type: integer
+                                        description: "Status code"
+                                        example: 400
+                                    message:
+                                        type: string
+                                        description: "Error message"
+                                        example: "Bad Request"
+                InvalidCredentials:
+                    description: "Invalid credentials"
+                    content:
+                        "application/json":
+                            schema:
+                                type: object
+                                properties:
+                                    code:
+                                        type: integer
+                                        description: "Status code"
+                                        example: 401
+                                    message:
+                                        type: string
+                                        description: "Error message"
+                                        example: "Invalid credentials"
+                Unauthorized:
+                    description: "Authentication required"
+                    content:
+                        "application/json":
+                            schema:
+                                type: object
+                                properties:
+                                    code:
+                                        type: integer
+                                        description: "Status code"
+                                        example: 401
+                                    message:
+                                        type: string
+                                        description: "Error message"
+                                        example: "JWT Token not found"
+                AccessDenied:
+                    description: "AccessDenied Response"
+                    content:
+                        "application/json":
+                            schema:
+                                type: object
+                                properties:
+                                    code:
+                                        type: integer
+                                        description: "Status code"
+                                        example: 403
+                                    message:
+                                        type: string
+                                        description: "Error message"
+                                        example: "Access denied"
+                PaginatedCommentsList:
+                    description: "Paginated Comments List Response"
+                    content:
+                        "application/json":
+                            schema:
+                                $ref: '#/components/schemas/CommentsList'
+                PaginatedPostsList:
+                    description: "Paginated Posts List Response"
+                    content:
+                        "application/json":
+                            schema:
+                                $ref: '#/components/schemas/PostsList'
+                PaginatedUsersList:
+                    description: "Paginated Users List Response"
+                    content:
+                        "application/json":
+                            schema:
+                                $ref: '#/components/schemas/PostsList'
+
+
+            schemas:
+                PostsList:
+                    description: "Paginated list of posts"
+                    type: object
+                    properties:
+                        items:
+                            type: array
+                            items:
+                                $ref: "#/components/schemas/FullPost"
+                        count:
+                            type: integer
+                            example: 10
+                        total:
+                            type: integer
+                            example: 42
+                CommentsList:
+                    description: "Paginated list of comments"
+                    type: object
+                    properties:
+                        items:
+                            type: array
+                            items:
+                                $ref: "#/components/schemas/FullComment"
+                        count:
+                            type: integer
+                            example: 10
+                        total:
+                            type: integer
+                            example: 42
+                FullComment:
+                    description: "Full Comment"
+                    type: object
+                    properties:
+                        id:
+                            type: integer
+                        body:
+                            type: string
+                        post:
+                            type: object
+                            $ref: "#/components/schemas/PostInComment"
+                CommentInPost:
+                    description: "Comment in Post"
+                    type: object
+                    properties:
+                        body:
+                            type: string
+                FullPost:
+                    description: "Full Post"
+                    type: object
+                    properties:
+                        title:
+                            type: string
+                        slug:
+                            type: string
+                        description:
+                            type: string
+                        body:
+                            type: string
+                        comments:
+                            type: array
+                            items:
+                                $ref: "#/components/schemas/CommentInPost"
+                PostInComment:
+                    description: "Post in Comment"
+                    type: object
+                    properties:
+                        title:
+                            type: string
+                        slug:
+                            type: string
+                        description:
+                            type: string
+                        body:
+                            type: string
         security:
             - Bearer: []            
     areas: # to filter documented areas

@@ -17,6 +17,7 @@ class SecurityController extends AbstractRestController
 {
     /**
      * @Rest\Post(path="/login/token", name="api_login_token")
+     * @Rest\View(statusCode=Response::HTTP_OK)
      * @OA\RequestBody(
      *     required=true,
      *     @OA\JsonContent(
@@ -26,13 +27,14 @@ class SecurityController extends AbstractRestController
      *     )
      * ),
      * @OA\Response(
-     *     response=200,
+     *     response=Response::HTTP_OK,
      *     description="Returns the token authentication",
      *     @OA\JsonContent(
      *        type="object",
      *        @OA\Property(property="token", type="string")
      *     )
      * )
+     * @OA\Response(response=401, ref="#/components/responses/InvalidCredentials")
      */
     public function login(?User $user): Response
     {

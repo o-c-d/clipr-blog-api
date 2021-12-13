@@ -26,7 +26,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          parameters = { "id" = "expr(object.getId())" },
  *          absolute = true
  *      ),
- *      exclusion = @Hateoas\Exclusion(groups={"default"})
+ *      exclusion = @Hateoas\Exclusion(groups={"user_details"})
  * )
  * @Hateoas\Relation(
  *      "modify",
@@ -35,7 +35,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          parameters = { "id" = "expr(object.getId())" },
  *          absolute = true
  *      ),
- *      exclusion = @Hateoas\Exclusion(groups={"default"})
+ *      exclusion = @Hateoas\Exclusion(groups={"user_details"})
  * )
  * @Hateoas\Relation(
  *      "delete",
@@ -44,7 +44,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          parameters = { "id" = "expr(object.getId())" },
  *          absolute = true
  *      ),
- *      exclusion = @Hateoas\Exclusion(groups={"default"})
+ *      exclusion = @Hateoas\Exclusion(groups={"user_details"})
  * )
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -61,7 +61,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="integer")
      * @Serializer\Expose
      * @Serializer\Since("1.0")
-     * @Serializer\Groups({"default"})
+     * @Serializer\Groups({"user_details"})
      */
     private $id;
 
@@ -70,7 +70,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * @Serializer\Expose
      * @Serializer\Since("1.0")
-     * @Serializer\Groups({"default"})
+     * @Serializer\Groups({"user_details"})
      *
      * @Assert\NotBlank()
      * @Assert\Email()
@@ -82,7 +82,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * @Serializer\Expose
      * @Serializer\Since("1.0")
-     * @Serializer\Groups({"default", "input"})
+     * @Serializer\Groups({"user_details", "user_input"})
      */
     private $roles = [];
 

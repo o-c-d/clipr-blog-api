@@ -46,7 +46,8 @@ class PostController extends AbstractRestController
      *     default="1",
      *     description="The current page"
      * )
-     * @Rest\View(serializerGroups={"default"})
+     * @Rest\View(statusCode=Response::HTTP_OK, serializerGroups={"post_details"})
+     * @OA\Response(response=Response::HTTP_OK, ref="#/components/responses/PaginatedPostsList")
      */
     public function listAction(ParamFetcherInterface $paramFetcher, PostProvider $provider)
     {
@@ -60,11 +61,11 @@ class PostController extends AbstractRestController
      *     requirements = {"slug"="[a-zA-Z0-9\-_\/]+"}
      * )
      * @ParamConverter("post", options={"mapping": {"slug": "slug"}})
-     * @Rest\View(serializerGroups={"default"})
+     * @Rest\View(statusCode=Response::HTTP_OK, serializerGroups={"post_details"})
      * @OA\Response(
      *     response=200,
-     *     description="Post",
-     *     @Model(type=Post::class, groups={"default"})
+     *     description="Details about a Post",
+     *     @Model(type=Post::class, groups={"post_details"})
      * )
      */
     public function showAction(Post $post)
@@ -73,7 +74,6 @@ class PostController extends AbstractRestController
     }
 
     /**
-     * @Rest\View(StatusCode = 200)
      * @Rest\Post(
      *     path = "/import",
      *     name = "api_post_import",
@@ -83,6 +83,13 @@ class PostController extends AbstractRestController
      *     description="Uri to import."
      * )
      * @Security("is_granted('ROLE_WRITER')")
+     * @Rest\View(statusCode=201, serializerGroups={"post_details"})
+     * @OA\Response(
+     *     response=201,
+     *     description="Details about imported Post",
+     *     @OA\JsonContent(ref=@Model(type=Post::class, groups={"post_details"}))
+     * )
+     * @OA\Response(response=401, ref="#/components/responses/Unauthorized")
      */
     public function importAction(ParamFetcherInterface $paramFetcher, PostProvider $postProvider)
     {
@@ -92,9 +99,9 @@ class PostController extends AbstractRestController
 
     /**
      * @Rest\Post(path="/", name="api_post_create")
-     * @Rest\View(StatusCode = 201)
-     * @ParamConverter("post", converter="fos_rest.request_body")
-     * @Security("is_granted('ROLE_WRITER')")
+     * @Rest\View(statusCode=201, serializerGroups={"post_details"})
+     * @ParamConverter("post", converter="fos_rest.request_body", options={"deserializationContext"={"groups"={"post_input"}, "version"="1.0"}})
+     * @Security("is_granted('ROLE_WRITER')", statusCode=401, message="Authentication required.")
      * @OA\RequestBody(
      *      required=true,
      *      @OA\JsonContent(ref=@Model(type=Post::class, groups={"post_input"}))
@@ -102,8 +109,9 @@ class PostController extends AbstractRestController
      * @OA\Response(
      *     response=201,
      *     description="Returns the new Post",
-     *     @OA\JsonContent(ref=@Model(type=Post::class, groups={"default"}))
+     *     @OA\JsonContent(ref=@Model(type=Post::class, groups={"post_details"}))
      * )
+     * @OA\Response(response=401, ref="#/components/responses/Unauthorized")
      */
     public function createAction(Post $post, PostManager $manager, ConstraintViolationListInterface $validationErrors)
     {
@@ -115,19 +123,26 @@ class PostController extends AbstractRestController
     }
 
     /**
-     * @Rest\View(StatusCode = 200)
+     * @Rest\View(statusCode=200, serializerGroups={"post_details"})
      * @Rest\Patch(
      *     path = "/{slug}",
      *     name = "api_post_update",
      *     requirements = {"slug"="[a-zA-Z0-9\-_\/]+"}
      * )
      * @ParamConverter("post", options={"mapping": {"slug": "slug"}})
-     * @ParamConverter("newPost", converter="fos_rest.request_body")
-     * @Security("is_granted('edit', $post)")
+     * @ParamConverter("newPost", converter="fos_rest.request_body", options={"deserializationContext"={"groups"={"post_input"}, "version"="1.0"}})
+     * @Security("is_granted('edit', post)", statusCode=404, message="Resource not found.")
      * @OA\RequestBody(
      *      required=true,
      *      @OA\JsonContent(ref=@Model(type=Post::class, groups={"post_input"}))
      * ),
+     * @OA\Response(
+     *     response=200,
+     *     description="Returns the updated Post",
+     *     @OA\JsonContent(ref=@Model(type=Post::class, groups={"post_details"}))
+     * )
+     * @OA\Response(response=401, ref="#/components/responses/Unauthorized")
+     * @OA\Response(response=403, ref="#/components/responses/AccessDenied")
      */
     public function updateAction(Post $post, Post $newPost, ConstraintViolationListInterface $validationErrors, PostManager $manager)
     {
@@ -139,22 +154,22 @@ class PostController extends AbstractRestController
     }
 
     /**
-     * @Rest\View(StatusCode = 200)
+     * @Rest\View(statusCode=200, serializerGroups={"post_details"})
      * @Rest\Post(
      *     path = "/{slug}/comments",
      *     name = "api_post_comment",
      *     requirements = {"slug"="[a-zA-Z0-9\-_\/]+"}
      * )
      * @ParamConverter("post", options={"mapping": {"slug": "slug"}})
-     * @ParamConverter("comment", converter="fos_rest.request_body")
+     * @ParamConverter("comment", converter="fos_rest.request_body", options={"deserializationContext"={"groups"={"comment_input"}, "version"="1.0"}})
      * @OA\RequestBody(
      *      required=true,
      *      @OA\JsonContent(ref=@Model(type=Comment::class, groups={"comment_input"}))
      * ),
      * @OA\Response(
      *     response=201,
-     *     description="Returns the new Post",
-     *     @OA\JsonContent(ref=@Model(type=Post::class, groups={"default"}))
+     *     description="Returns the Post and his new Comment",
+     *     @OA\JsonContent(ref=@Model(type=Post::class, groups={"post_details"}))
      * )
      */
     public function commentAction(Post $post, Comment $comment, ConstraintViolationListInterface $validationErrors, CommentManager $manager)
@@ -176,7 +191,10 @@ class PostController extends AbstractRestController
      *     requirements = {"slug"="[a-zA-Z0-9\-_\/]+"}
      * )
      * @ParamConverter("post", options={"mapping": {"slug": "slug"}})
-     * @Security("is_granted('delete', $post)")
+     * @Security("is_granted('delete', post)", statusCode=404, message="Resource not found.")
+     * @OA\Response(response=204, description="Response for a successfull deletion of Comment")
+     * @OA\Response(response=401, ref="#/components/responses/Unauthorized")
+     * @OA\Response(response=403, ref="#/components/responses/AccessDenied")
      */
     public function deleteAction(Post $post, PostManager $manager)
     {

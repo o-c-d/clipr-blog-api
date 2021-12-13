@@ -1,5 +1,5 @@
 fos_rest:
-    param_fetcher_listener: true
+    param_fetcher_listener: force
     view:
         view_response_listener: true
     body_converter:
@@ -11,8 +11,14 @@ fos_rest:
     exception:
         enabled: true
         codes:
-           { App\Exception\ResourceValidationException: 400 }
-    
+           { 
+                App\Exception\ResourceValidationException: 400,
+                Symfony\Component\HttpKernel\Exception\BadRequestHttpException: 400,
+                Symfony\Component\Security\Core\Exception\AuthenticationException: 401,
+                Doctrine\ORM\OptimisticLockException: HTTP_CONFLICT,
+                Symfony\Component\Security\Core\Exception\AccessDeniedException: 403,
+                Symfony\Component\Routing\Exception\ResourceNotFoundException: 404,
+           }
     format_listener:
         enabled: true
         rules:

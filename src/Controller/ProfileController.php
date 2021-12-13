@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Provider\CommentProvider;
 use App\Provider\PostProvider;
 use FOS\RestBundle\Controller\Annotations as Rest;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -16,6 +17,7 @@ use Nelmio\ApiDocBundle\Annotation\Model;
  * @Route("/api/profile")
  * @Security("is_granted('ROLE_USER')")
  * @OA\Tag(name="Profile")
+ * @OA\Response(response=401, ref="#/components/responses/Unauthorized")
  */
 class ProfileController extends AbstractRestController
 {
@@ -24,7 +26,12 @@ class ProfileController extends AbstractRestController
      *     path = "/",
      *     name = "api_get_profile",
      * )
-     * @Rest\View(serializerGroups={"default"})
+     * @Rest\View(statusCode=Response::HTTP_OK, serializerGroups={"user_details"})
+     * @OA\Response(
+     *      response=Response::HTTP_OK, 
+     *      description="Details about current User", 
+     *      @Model(type=User::class, groups={"user_details"})
+     * )
      */
     public function getProfille()
     {
@@ -37,7 +44,8 @@ class ProfileController extends AbstractRestController
      *     path = "/comments",
      *     name = "api_get_profile_comments",
      * )
-     * @Rest\View(serializerGroups={"default"})
+     * @Rest\View(statusCode=Response::HTTP_OK, serializerGroups={"comment_details"})
+     * @OA\Response(response=Response::HTTP_OK, ref="#/components/responses/PaginatedCommentsList")
      */
     public function getProfileComments(CommentProvider $commentProvider)
     {
@@ -50,7 +58,8 @@ class ProfileController extends AbstractRestController
      *     path = "/posts",
      *     name = "api_get_profile_posts",
      * )
-     * @Rest\View(serializerGroups={"default"})
+     * @Rest\View(statusCode=Response::HTTP_OK, serializerGroups={"post_details"})
+     * @OA\Response(response=Response::HTTP_OK, ref="#/components/responses/PaginatedPostsList")
      */
     public function getProfilePosts(PostProvider $postProvider)
     {

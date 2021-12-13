@@ -24,7 +24,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          parameters = { "id" = "expr(object.getId())" },
  *          absolute = true
  *      ),
- *      exclusion = @Hateoas\Exclusion(groups={"default"})
+ *      exclusion = @Hateoas\Exclusion(groups={"comment_details", "post_details"})
  * )
  */
 class Comment
@@ -47,7 +47,7 @@ class Comment
      * @ORM\Column(type="integer")
      * @Serializer\Expose
      * @Serializer\Since("1.0")
-     * @Serializer\Groups({"default"})
+     * @Serializer\Groups({"comment_details", "post_details"})
      */
     private $id;
 
@@ -59,7 +59,8 @@ class Comment
      * @ORM\OrderBy({"createdAt" = "DESC"})
      * @Serializer\Expose
      * @Serializer\Since("1.0")
-     * @Serializer\Groups({"default"})
+     * @Serializer\Groups({"comment_details"})
+     * @Serializer\Type("App\Entity\Post")
      */
     protected $post;
 
@@ -67,7 +68,7 @@ class Comment
      * @ORM\Column(type="text")
      * @Serializer\Expose
      * @Serializer\Since("1.0")
-     * @Serializer\Groups({"default", "comment_input"})
+     * @Serializer\Groups({"comment_details", "comment_input", "post_details"})
      */
     private $body;
 

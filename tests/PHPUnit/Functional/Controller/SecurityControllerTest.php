@@ -8,10 +8,19 @@ class SecurityControllerTest extends ApiTestCase
 {
     public function testLogin(): void
     {
-        $token =  $this->getToken('writer@test.dev', 'writer');
-        $this->assertNotNull($token);
-        $username = $this->extractUsernameFromJWT($token);
-        $this->assertEquals('writer@test.dev', $username);
+        $data = $this->apiRequest(self::$anonymous, 'POST', '/api/login/token', [], json_encode([
+            "username" => "writer@test.dev",
+            "password" => "writer",
+        ]));
+        $this->assertArrayHasKey("token", $data);
+        $this->assertSame(200, self::$anonymous->getResponse()->getStatusCode());
+
+        $data = $this->apiRequest(self::$anonymous, 'POST', '/api/login/token', [], json_encode([
+            "username" => "toto",
+            "password" => "toto",
+        ]));
+        $this->assertSame(401, self::$anonymous->getResponse()->getStatusCode());
+
     }
 
     protected function extractUsernameFromJWT(string $token): ?string
